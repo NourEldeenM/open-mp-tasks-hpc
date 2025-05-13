@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <omp.h>
+
+void print_arr(int a[], int n)
+{
+    int i;
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    return;
+}
+
+
+int main()
+{
+    int n;
+    printf("Enter size of vectors N: ");
+    scanf("%d", &n);
+
+    // Read Matrix
+    int a[n][n];
+    printf("Enter Matrix A Elements: \n");
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        int j;
+        for (j = 0; j < n; j++)
+        {
+            scanf("%d", &a[i][j]);
+        }
+    }
+
+    // Read Vector
+    int r[n];
+    printf("Enter Vector R Elements: ");
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &r[i]);
+    }
+
+    // Init Result
+    int result[n];
+    #pragma omp parallel for
+    for (int i = 0; i < n; i++)
+    {
+        result[i] = 0;
+    }
+
+    // Compute Result
+    #pragma omp parallel for    
+    for (i = 0; i < n; i++)
+    {
+        for (int k = 0; k < n; k++)
+        {
+            result[i] += a[i][k] * r[k];
+        }
+    }
+
+    // Print Result
+    print_arr(result, n);
+}
